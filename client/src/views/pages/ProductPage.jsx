@@ -1,9 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Rating } from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useViewProductDetailsQuery } from "../../state/slices/productsSlice";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../state/slices/cartSlice";
 
 import {
   FaCalendarAlt,
@@ -18,7 +21,18 @@ import "slick-carousel/slick/slick-theme.css";
 
 // fetch product
 const ProductPage = () => {
+  const [quantity, setQuantity] = useState(1);
+
   const { id: productId } = useParams();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // handle add to cart
+  const addToCartHandler = () => {
+    dispatch(addToCart({ ...product, quantity }));
+    navigate("/cart");
+  };
 
   const {
     data: product,
@@ -219,22 +233,50 @@ const ProductPage = () => {
                 <div className="py-2">
                   <div className="flex justify-between">
                     <span>Status:</span>
-                    <span className="font-semibold">
+                    <span
+                      className={`font-semibold text-${
+                        product.countInStock > 0 ? "" : "red"
+                      }-500 `}
+                    >
                       {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
                     </span>
                   </div>
                 </div>
                 <div className="py-4">
+                  {/* quantity */}
+                  {product.countInStock > 0 && (
+                    <div className="border-t border-gray-200 mt-4 pt-4">
+                      <div className="flex items-center">
+                        <label htmlFor="quantity" className="mr-2">
+                          Quantity
+                        </label>
+                        <select
+                          id="quantity"
+                          className="border rounded-md px-3 py-2"
+                          value={quantity}
+                          onChange={(e) => setQuantity(Number(e.target.value))}
+                        >
+                          {[...Array(product.countInStock).keys()].map(
+                            (index) => (
+                              <option key={index} value={index + 1}>
+                                {index + 1}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </div>
+                    </div>
+                  )}
+
                   <button
-                    className={`w-full ${
+                    className={`w-full mt-4 ${
                       product.countInStock === 0
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-blue-500 hover:bg-blue-600"
                     } text-white font-semibold py-2 rounded`}
                     type="button"
                     disabled={product.countInStock === 0}
-                    // Assuming you have the handleAddToCart function defined somewhere in the component
-                    // onClick={() => handleAddToCart(product)}
+                    onClick={addToCartHandler}
                   >
                     Add to Cart
                   </button>

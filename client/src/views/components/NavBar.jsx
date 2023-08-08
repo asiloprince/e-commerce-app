@@ -2,13 +2,18 @@ import { useState } from "react";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import Logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function NavBar() {
+  const { cartItems } = useSelector((state) => state.cart);
+  const totalQuantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
+
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
+
   return (
     <header className="bg-white-800 text-white">
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -28,6 +33,9 @@ function NavBar() {
           >
             <FaShoppingCart className="mr-1 text-gray-600" />
             <span className="text-gray-600">Cart</span>
+            <span className="inline-block bg-red-500 text-white w-6 h-6 px-2 py-1 flex justify-center items-center rounded-full ml-2 ">
+              {totalQuantity}
+            </span>
           </Link>
           <Link
             to="/login"
