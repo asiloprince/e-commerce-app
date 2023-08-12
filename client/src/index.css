@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron&family=Permanent+Marker&family=Poppins&display=swap");
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+* > * {
+  font-family: "Poppins", sans-serif;
+}
