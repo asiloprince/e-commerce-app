@@ -5,6 +5,7 @@ const MongoClient = require("./db/db.js");
 const errorMiddleware = require("./global/middleware/errorMiddleware.js");
 
 const products = require("./apis/product");
+const users = require("./apis/users.js");
 
 dotenv.config();
 MongoClient();
@@ -12,9 +13,11 @@ MongoClient();
 // middlewares
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// routes
+// Apis route
 app.use("/api/products", products);
+app.use("/api/users", users);
 
 app.use(errorMiddleware.notFound);
 app.use(errorMiddleware.errorHandler);
