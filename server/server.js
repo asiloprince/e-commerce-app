@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const MongoClient = require("./db/db.js");
+const cookieParser = require("cookie-parser");
 
 const errorMiddleware = require("./global/middleware/errorMiddleware.js");
 
@@ -14,6 +15,7 @@ MongoClient();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Apis route
 app.use("/api/products", products);
