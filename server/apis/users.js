@@ -7,6 +7,8 @@ const { protect, admin } = require("../global/middleware/authentication");
 
 const router = express.Router();
 
+// USERS
+
 // login
 const authLoginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -86,6 +88,34 @@ const getUserProfile = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 });
+
+// update user profile
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not Found");
+  }
+});
+
+// ADMIN
+
 // get user id
 const getUserById = asyncHandler(async (req, res) => {
   res.send("get user by id");
@@ -95,18 +125,18 @@ const getUserById = asyncHandler(async (req, res) => {
 const getUsers = asyncHandler(async (req, res) => {
   res.send("get users");
 });
-// update user profile
-const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("update profile");
-});
+
 //  update user
 const updateUser = asyncHandler(async (req, res) => {
   res.send("update user");
 });
+
 //  delete user
 const deleteUser = asyncHandler(async (req, res) => {
   res.send("delete user");
 });
+
+// API Endpoint Routes
 
 router.route("/").post(registerUser).get(protect, admin, getUsers);
 router.post("/logout", logoutUser);
