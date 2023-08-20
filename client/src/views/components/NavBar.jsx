@@ -8,12 +8,19 @@ import {
   FaAngleDown,
 } from "react-icons/fa";
 import Logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutMutation } from "../../state/slices/usersApiSlice";
+import { logout } from "../../state/slices/authSlice";
 
 function NavBar() {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [logoutApi] = useLogoutMutation();
 
   const totalQuantity = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
 
@@ -23,8 +30,14 @@ function NavBar() {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const logoutHandler = () => {
-    console.log("logout");
+  const logoutHandler = async () => {
+    try {
+      await logoutApi().unwrap();
+      dispatch(logout());
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <header className="bg-white-800 text-white">
@@ -58,7 +71,7 @@ function NavBar() {
               <div className="absolute hidden group-hover:block bg-white w-40 right-0 mt-6 py-2 rounded shadow-lg transform origin-top">
                 <button
                   className="block flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  onClick={logoutHandler}
+                  onClick={() => alert("profile")}
                 >
                   <FaUser className="text-gray-600 mr-1" />
                   <span> Profile</span>
