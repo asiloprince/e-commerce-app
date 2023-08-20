@@ -8,6 +8,8 @@ import ProductPage from "./views/pages/ProductPage.jsx";
 import { Provider } from "react-redux";
 import store from "./state/store.js";
 import CartPage from "./views/pages/cartPage.jsx";
+import Login from "./views/pages/Login.jsx";
+import Register from "./views/pages/Register.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -17,7 +19,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="/" element={<App />}>
             <Route index={true} element={<HomePage />} />
             <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage/>}/>
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Route>
         </Routes>
       </BrowserRouter>
