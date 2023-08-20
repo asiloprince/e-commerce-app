@@ -43,7 +43,7 @@ const CartPage = () => {
           </div>
         ) : (
           <ul className="divide-y divide-gray-200">
-            {cartItems.map((item) => (
+            {cartItems.map((item, index) => (
               <li key={item._id} className="py-2">
                 <div className="flex items-center">
                   <div className="w-16 md:w-1/6 mx-2">
@@ -60,11 +60,11 @@ const CartPage = () => {
                     ₱{item.price}{" "}
                     <div className="border-t border-gray-200 mt-4 pt-4 ">
                       <div className="flex items-center">
-                        <label htmlFor="quantity" className="mr-2">
+                        <label htmlFor={`quantity-${index}`} className="mr-2">
                           Qty
                         </label>
                         <select
-                          id="quantity"
+                          id={`quantity-${index}`}
                           className="border rounded-md px-3 py-2"
                           value={item.quantity}
                           onChange={(e) =>
